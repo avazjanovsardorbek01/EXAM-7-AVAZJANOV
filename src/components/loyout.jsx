@@ -12,12 +12,22 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Button, ListItemText } from "@mui/material";
+import { ListItemText } from "@mui/material";
 import routes from "../router/routes";
 import { LogOutModal } from "./modal";
-import logo from "../assets/nike.svg";
+import NikeLogo from "../assets/icons-nike.svg";
+
+// Define the color scheme
+const colors = {
+  turquoise: "#FE8A2F",
+  white: "#FFFFFF",
+  gray: "#F0F0F0",
+  black: "#000000",
+  customColor: "#FE8A2F",
+  hoverColor: "#FFA752", // Updated hover color
+};
 
 const drawerWidth = 240;
 
@@ -26,7 +36,6 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -46,8 +55,11 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <div>
       <Toolbar>
-        {" "}
-        <img src={logo} alt="logo" className="w-[144px] h-[50px]" />
+        <img
+          src={NikeLogo}
+          alt="logo"
+          className="w-[150px] h-[80px] text-center"
+        />
       </Toolbar>
       <Divider />
       <List>
@@ -55,17 +67,34 @@ function ResponsiveDrawer(props) {
           <NavLink
             to={item.path}
             key={index}
-            className={
-              item.path === pathname ? "block bg-yellow-400 text-white" : ""
-            }
+            style={({ isActive }) => ({
+              textDecoration: "none",
+              backgroundColor: isActive ? colors.turquoise : "transparent",
+              color: colors.black,
+            })}
           >
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                sx={{
+                  backgroundColor:
+                    pathname === item.path ? colors.turquoise : "transparent",
+                  color: pathname === item.path ? colors.white : colors.black,
+                  "&:hover": {
+                    backgroundColor: colors.gray,
+                    color: colors.black,
+                    // Updated hover color
+                    "& span": {
+                      color: colors.hoverColor,
+                    },
+                  },
+                }}
+              >
                 <ListItemIcon>
                   <span
-                    className={
-                      item.path === pathname ? "text-white" : "text-yellow-500"
-                    }
+                    style={{
+                      color:
+                        pathname === item.path ? colors.white : colors.black,
+                    }}
                   >
                     {item.icon}
                   </span>
@@ -76,7 +105,6 @@ function ResponsiveDrawer(props) {
           </NavLink>
         ))}
       </List>
-      <Divider />
     </div>
   );
 
@@ -91,7 +119,7 @@ function ResponsiveDrawer(props) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "#FACC15", // Set the background color here
+          backgroundColor: colors.customColor, // Updated color here
         }}
       >
         <Toolbar>
@@ -105,8 +133,13 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <ListItem sx={{ justifyContent: "space-between" }}>
-            <Typography variant="h6" noWrap component="div">
-              Responsive drawer
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ color: colors.white }}
+            >
+              Responsive Drawer
             </Typography>
             <LogOutModal />
           </ListItem>
@@ -131,6 +164,7 @@ function ResponsiveDrawer(props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: colors.white,
             },
           }}
         >
@@ -143,6 +177,7 @@ function ResponsiveDrawer(props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: colors.white,
             },
           }}
           open

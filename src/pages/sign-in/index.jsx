@@ -167,7 +167,7 @@ const Login = () => {
                   style={{ cursor: "pointer", color: "#1976d2", marginTop: 10 }}
                   onClick={handleOpenForgotPassword}
                 >
-                  {/* Forgot your password? */}
+                  Forgot your password?
                 </Typography>
                 {error && (
                   <Typography
@@ -199,7 +199,7 @@ const Login = () => {
                   disabled={isSubmitting || submitting}
                   style={{
                     marginTop: 20,
-                    backgroundColor: "#FFBC35",
+                    backgroundColor: "#FE8A2F", // Changed to #FE8A2F
                     color: "#fff",
                     fontWeight: 700,
                   }}
@@ -220,7 +220,7 @@ const Login = () => {
                       display: "inline-flex",
                       alignItems: "center",
                       marginRight: 10,
-                      color: "№FFBC35",
+                      color: "#FFBC35",
                     }}
                   >
                     <img
@@ -284,7 +284,7 @@ const Login = () => {
           </Button>
           <Button
             onClick={handleCloseForgotPassword}
-            style={{ backgroundColor: "#FFBC35", color: "#fff" }}
+            style={{ backgroundColor: "#FE8A2F", color: "#fff" }} // Changed to #FE8A2F
           >
             Send
           </Button>

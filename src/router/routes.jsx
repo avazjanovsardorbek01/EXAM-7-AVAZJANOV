@@ -1,7 +1,7 @@
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import CategoryIcon from "@mui/icons-material/Category";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-import EngineeringIcon from '@mui/icons-material/Engineering';
+import GroupIcon from "@mui/icons-material/Group";
 const routes = [
   {
     path: "/",
@@ -16,7 +16,7 @@ const routes = [
   {
     path: "/workers",
     content: "Workers",
-    icon: <EngineeringIcon />,
+    icon: <GroupIcon />,
   },
 ];
 

@@ -1,42 +1,141 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Button } from "@mui/material";
-import { CustomizedTables } from "@ui";
-import { getProduct } from "../../service/products";
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import UploadIcon from "@mui/icons-material/Upload";
+import { useNavigate } from "react-router-dom";
+import { productsApi } from "../../../service";
+import { IconButton, Button } from "@mui/material";
 
-const ProductsList = () => {
-  const [products, setProducts] = useState([]);
+const colors = {
+  turquoise: "#FE8A2F",
+  white: "#FFFFFF",
+  gray: "#F0F0F0",
+  black: "#000000",
+};
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: colors.turquoise,
+    color: colors.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    color: colors.black,
+  },
+}));
 
-  const fetchData = async () => {
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: colors.gray,
+  },
+  "&:nth-of-type(even)": {
+    backgroundColor: colors.white,
+  },
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  backgroundColor: colors.white,
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  color: colors.yellow,
+  border: `1px solid ${colors.yellow}`,
+  "&:hover": {
+    backgroundColor: colors.yellow,
+    color: colors.black,
+  },
+}));
+
+const CustomizedTables = ({ data }) => {
+  const navigate = useNavigate();
+
+  const deleteItem = async (id) => {
     try {
-      const response = await getProduct(); // Получаем список продуктов
-      if (response.status === 200) {
-        setProducts(response.data); // Устанавливаем полученные данные в состояние
+      const response = await productsApi.delete(id);
+      if (response.status === 200 || response.status === 201) {
+        window.location.reload();
       }
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.log(error);
     }
+  };
+
+  const handleUpload = (id) => {
+    console.log(`Upload action clicked for product with ID: ${id}`);
+  };
+
+  const handleNavigate = (id) => {
+    navigate(`/products/${id}`);
   };
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        Products List
-      </Typography>
-      <Button
-        variant="contained"
-        onClick={fetchData} // Обновление данных при нажатии кнопки
-        sx={{ backgroundColor: "#FACC15", color: "#fff", marginBottom: "10px" }}
-      >
-        Refresh
-      </Button>
-      <CustomizedTables data={products} />{" "}
-      {/* Передаем данные продуктов в компонент CustomizedTables */}
+      <TableContainer component={Paper} sx={{ backgroundColor: colors.white }}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center">T/R</StyledTableCell>
+              <StyledTableCell align="center">Product Name</StyledTableCell>
+              <StyledTableCell align="center">Color</StyledTableCell>
+              <StyledTableCell align="center">Size</StyledTableCell>
+              <StyledTableCell align="center">Count</StyledTableCell>
+              <StyledTableCell align="center">Cost</StyledTableCell>
+              <StyledTableCell align="center">Action</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.map((item, index) => (
+              <StyledTableRow key={index}>
+                <StyledTableCell align="center">{index + 1}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {item.product_name}
+                </StyledTableCell>
+                <StyledTableCell align="center">{item.color}</StyledTableCell>
+                <StyledTableCell align="center">{item.size}</StyledTableCell>
+                <StyledTableCell align="center">{item.count}</StyledTableCell>
+                <StyledTableCell align="center">{item.cost}</StyledTableCell>
+                <StyledTableCell align="center">
+                  <StyledButton onClick={() => deleteItem(item.product_id)}>
+                    <DeleteIcon sx={{ color: colors.black }} />
+                  </StyledButton>
+                  <IconButton
+                    onClick={() => handleNavigate(item.product_id)}
+                    sx={{
+                      color: colors.black,
+                      "&:hover": { color: colors.black },
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleUpload(item.product_id)}
+                    aria-label="upload image"
+                    sx={{
+                      color: colors.black,
+                      "&:hover": { color: colors.black },
+                    }}
+                  >
+                    <UploadIcon />
+                  </IconButton>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };
 
-export default ProductsList;
+export default CustomizedTables;

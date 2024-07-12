@@ -4,6 +4,11 @@ import { WorkersModal } from "@modal";
 import { WorkersTable } from "@ui";
 import workers from "../../service/workers";
 
+const colors = {
+  turquoise: "#FE8A2F",
+  white: "#FFFFFF",
+};
+
 function Index() {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -32,9 +37,15 @@ function Index() {
           <Button
             variant="contained"
             onClick={() => setOpen(true)}
-            style={{ backgroundColor: "#FACC15", color: "#fff" }}
+            sx={{
+              backgroundColor: colors.turquoise, // Turquoise color
+              color: colors.white, // White text color
+              "&:hover": {
+                backgroundColor: "#FE8A2F", // Slightly darker turquoise for hover effect
+              },
+            }}
           >
-            Add
+            Add Worker
           </Button>
         </div>
         <WorkersTable data={data} />

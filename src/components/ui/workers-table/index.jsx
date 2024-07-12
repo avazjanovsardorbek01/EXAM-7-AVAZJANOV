@@ -13,9 +13,18 @@ import workers from "../../../service/workers";
 import { WorkersModal } from "@modal";
 import { useState } from "react";
 
+// Define the color scheme
+const colors = {
+  header: "#FE8A2F",
+  white: "#FFFFFF",
+  hover: "#FFE7D4",
+  black: "#000000",
+};
+
+// Styled components for the table
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#FACC15",
+    backgroundColor: colors.header,
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -25,10 +34,23 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: colors.hover,
   },
   "&:last-child td, &:last-child th": {
     border: 0,
+  },
+}));
+
+const StyledButton = styled("button")(({ theme }) => ({
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  color: colors.black,
+  "&:hover": {
+    color: colors.header,
+  },
+  "& .MuiSvgIcon-root": {
+    fontSize: 20,
   },
 }));
 
@@ -59,7 +81,7 @@ const CustomizedTables = ({ data }) => {
         open={open}
         handleClose={() => setOpen(false)}
       />
-      <TableContainer component={Paper} sx={{ backgroundColor: "#" }}>
+      <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -84,31 +106,12 @@ const CustomizedTables = ({ data }) => {
                 <StyledTableCell align="center">{item.gender}</StyledTableCell>
                 <StyledTableCell align="center">{item.age}</StyledTableCell>
                 <StyledTableCell align="center">
-                  <button
-                    onClick={() => deleteItem(item.id)}
-                    style={{
-                      backgroundColor: "#FACC15",
-                      color: "#fff",
-                      padding: "5px",
-                      borderRadius: "5px",
-                      border: "none",
-                    }}
-                  >
+                  <StyledButton onClick={() => deleteItem(item.id)}>
                     <DeleteIcon />
-                  </button>
-                  <button
-                    onClick={() => editItem(item)}
-                    style={{
-                      backgroundColor: "#FACC15",
-                      color: "#fff",
-                      padding: "5px",
-                      borderRadius: "5px",
-                      border: "none",
-                      marginLeft: "5px",
-                    }}
-                  >
+                  </StyledButton>
+                  <StyledButton onClick={() => editItem(item)}>
                     <EditIcon />
-                  </button>
+                  </StyledButton>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

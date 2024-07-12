@@ -25,6 +25,7 @@ export default function BasicModal() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
+
   const logOut = () => {
     localStorage.removeItem("access_token");
     navigate("/sign-in");
@@ -39,7 +40,7 @@ export default function BasicModal() {
           border: "1px solid #fff",
           padding: "5px 6px",
           borderRadius: "6px",
-          backgroundColor: "#FACC15",
+          backgroundColor: "#ffffff20",
         }}
       >
         <LogoutIcon sx={{ color: "white" }} />
@@ -51,36 +52,39 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ color: "black" }}
-            >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "16px",
+            }}
+          >
+            <Typography id="modal-modal-title" variant="h6" component="h2">
               Do you want to exit?
             </Typography>
-            <div
-              style={{
-                display: "flex",
-                gap: "12px",
-                marginTop: "64px",
-                color: "#FACC15",
-              }}
-            >
+            <div style={{ display: "flex", gap: "12px" }}>
               <Button
                 onClick={handleClose}
-                style={{
-                  color: "#FACC15",
+                sx={{
+                  color: "#FE8A2F",
+                  borderColor: "#007BFF",
+                  border: "1px solid",
+                  "&:hover": { borderColor: "#FE8A2F", color: "#FE8A2F" },
                 }}
               >
                 No
               </Button>
               <Button
-                style={{
-                  color: "#FACC15",
-                }}
                 onClick={logOut}
+                variant="contained"
+                sx={{
+                  backgroundColor: "#FE8A2F", // Updated to #FE8A2F
+                  color: "#FFFFFF", // White text color
+                  "&:hover": {
+                    backgroundColor: "#FFA752", // Darker shade of #FE8A2F on hover
+                  },
+                }}
               >
                 Yes
               </Button>

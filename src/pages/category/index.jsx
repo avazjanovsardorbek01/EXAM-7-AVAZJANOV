@@ -4,15 +4,21 @@ import { CategoryTable } from "@ui";
 import { useEffect, useState } from "react";
 import { category } from "../../service";
 
-const Index = () => {
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
+const themeColors = {
+  primary: "#FE8A2F",
+  textWhite: "#FFFFFF",
+  backgroundGray: "#F0F0F0",
+};
 
-  const getData = async () => {
+const CategoryIndex = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = async () => {
     try {
       const response = await category.get();
       if (response.status === 200 && response?.data?.categories) {
-        setData(response?.data?.categories);
+        setCategories(response?.data?.categories);
       }
     } catch (error) {
       console.log(error);
@@ -20,33 +26,37 @@ const Index = () => {
   };
 
   useEffect(() => {
-    getData();
+    fetchCategories();
   }, []);
 
   return (
     <>
-      <CategoryModal open={open} handleClose={() => setOpen(false)} />
+      <CategoryModal
+        open={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+      />
       <div className="flex flex-col gap-3">
         <div className="flex justify-end">
           <Button
             variant="contained"
-            onClick={() => setOpen(true)}
+            onClick={() => setIsModalOpen(true)}
             sx={{
-              backgroundColor: "#FACC15",
-              color: "#fff",
-              fontWeight: 700,
+              backgroundColor: themeColors.primary,
+              color: themeColors.textWhite,
               "&:hover": {
-                backgroundColor: "#FFBC15",
+                backgroundColor: themeColors.primary,
               },
             }}
           >
-            Add
+            Add Category
           </Button>
         </div>
-        <CategoryTable data={data} />
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <CategoryTable data={categories} />
+        </div>
       </div>
     </>
   );
 };
 
-export default Index;
+export default CategoryIndex;

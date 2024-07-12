@@ -1,4 +1,5 @@
-import React from "react";
+import * as React from "react";
+import * as yup from "yup";
 import {
   Modal,
   Backdrop,
@@ -11,40 +12,65 @@ import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import workers from "../../../service/workers";
 
-const Fade = ({ children, in: open }) => (
-  <div style={{ opacity: open ? 1 : 0, transition: "opacity 0.5s" }}>
-    {open && children}
-  </div>
-);
+const validationSchema = yup.object().shape({
+  age: yup
+    .number()
+    .required("Age is required")
+    .positive("Age must be a positive number")
+    .integer("Age must be an integer"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  first_name: yup.string().required("First Name is required"),
+  gender: yup.string().required("Gender is required"),
+  last_name: yup.string().required("Last Name is required"),
+  password: yup.string().required("Password is required"),
+  phone_number: yup
+    .string()
+    .matches(/^\d+$/, "Phone number must contain only digits")
+    .required("Phone Number is required"),
+});
 
-const Index = ({ open, handleClose, item }) => {
-  const initialValues = Object.keys(item || {}).reduce((acc, key) => {
-    acc[key] = item[key] || "";
-    return acc;
-  }, {});
-
-  const handleSubmit = async (values) => {
-    const apiCall = item ? workers.update : workers.create;
-    try {
-      const response = await apiCall(
-        item ? { id: item.id, ...values } : values
-      );
-      if (response.status === (item ? 200 : 201)) {
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+const Fade = ({ children, in: open }) => {
+  const style = {
+    opacity: open ? 1 : 0,
+    transition: "opacity 0.5s",
   };
 
-  const formFields = [
-    { name: "age", label: "Age", type: "number" },
-    { name: "email", label: "Email", type: "text" },
-    { name: "first_name", label: "First Name", type: "text" },
-    { name: "last_name", label: "Last Name", type: "text" },
-    { name: "password", label: "Password", type: "password" },
-    { name: "phone_number", label: "Phone", type: "text" },
-  ];
+  return <div style={style}>{open ? children : null}</div>;
+};
+
+const Index = ({ open, handleClose, item }) => {
+  const initialValues = {
+    age: item?.age ? item.age : "",
+    email: item?.email ? item.email : "",
+    first_name: item?.first_name ? item.first_name : "",
+    last_name: item?.last_name ? item.last_name : "",
+    gender: item?.gender ? item.gender : "",
+    password: item?.password ? item.password : "",
+    phone_number: item?.phone_number ? item.phone_number : "",
+  };
+
+  const handleSubmit = async (values) => {
+    if (item) {
+      const payload = { id: item.id, ...values };
+      try {
+        const response = await workers.update(payload);
+        if (response.status === 200) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const response = await workers.create(values);
+        if (response.status === 201) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <Modal
@@ -52,7 +78,9 @@ const Index = ({ open, handleClose, item }) => {
       onClose={handleClose}
       closeAfterTransition
       BackdropComponent={Backdrop}
-      BackdropProps={{ timeout: 500 }}
+      BackdropProps={{
+        timeout: 500,
+      }}
     >
       <Fade in={open}>
         <Box
@@ -71,28 +99,62 @@ const Index = ({ open, handleClose, item }) => {
           <Typography variant="h5" sx={{ my: 2, textAlign: "center" }}>
             Add Worker
           </Typography>
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
             {({ isSubmitting }) => (
               <Form>
-                {formFields.map(({ name, label, type }) => (
-                  <Field
-                    key={name}
-                    name={name}
-                    type={type}
-                    as={TextField}
-                    label={label}
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    helperText={
-                      <ErrorMessage
-                        name={name}
-                        component="p"
-                        className="text-[red] text-[15px]"
-                      />
-                    }
-                  />
-                ))}
+                <Field
+                  name="age"
+                  type="number"
+                  as={TextField}
+                  label="Age"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      className="text-[red] text-[15px]"
+                      component="span"
+                      name="age"
+                    />
+                  }
+                />
+
+                <Field
+                  name="email"
+                  type="text"
+                  as={TextField}
+                  label="Email"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      className="text-[red] text-[15px]"
+                      component="span"
+                      name="email"
+                    />
+                  }
+                />
+                <Field
+                  name="first_name"
+                  type="text"
+                  as={TextField}
+                  label="First Name"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      className="text-[red] text-[15px]"
+                      component="span"
+                      name="first_name"
+                    />
+                  }
+                />
                 <Field name="gender" as={RadioGroup} row>
                   <FormControlLabel
                     value="male"
@@ -104,14 +166,70 @@ const Index = ({ open, handleClose, item }) => {
                     control={<Radio />}
                     label="Female"
                   />
+                  <ErrorMessage
+                    className="text-[red] text-[15px]"
+                    component="span"
+                    name="gender"
+                  />
                 </Field>
+
+                <Field
+                  name="last_name"
+                  type="text"
+                  as={TextField}
+                  label="Last Name"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      className="text-[red] text-[15px]"
+                      component="span"
+                      name="last_name"
+                    />
+                  }
+                />
+                <Field
+                  name="password"
+                  type="password"
+                  as={TextField}
+                  label="Password"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      className="text-[red] text-[15px]"
+                      component="span"
+                      name="password"
+                    />
+                  }
+                />
+                <Field
+                  name="phone_number"
+                  type="text"
+                  as={TextField}
+                  label="Phone"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  helperText={
+                    <ErrorMessage
+                      className="text-[red] text-[15px]"
+                      component="span"
+                      name="phone_number"
+                    />
+                  }
+                />
                 <Button
                   type="submit"
                   variant="contained"
                   sx={{
-                    backgroundColor: "#FACC15",
-                    color: "#FFFF",
-                    "&:hover": { backgroundColor: "#FACC15" },
+                    bgcolor: "#FE8A2F",
+                    "&:hover": {
+                      bgcolor: "#E07B22",
+                    },
+                    color: "white",
                     marginBottom: "8px",
                   }}
                   fullWidth

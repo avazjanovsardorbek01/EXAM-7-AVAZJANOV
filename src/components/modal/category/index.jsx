@@ -15,33 +15,36 @@ const Fade = ({ children, in: open }) => {
     opacity: open ? 1 : 0,
     transition: "opacity 0.5s",
   };
+
   return <div style={style}>{open ? children : null}</div>;
 };
 
 const Index = ({ open, handleClose, item }) => {
   const initialValues = {
-    category_name: item?.category_name || "",
-    category_id: item?.category_id || "",
+    category_name: item?.category_name ? item.category_name : "",
+    category_id: item?.category_id ? item.category_id : "",
   };
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      if (item) {
-        const payload = { id: item.id, ...values };
+  const handleSubmit = async (values) => {
+    if (item) {
+      const payload = { id: item.id, ...values };
+      try {
         const response = await category.update(payload);
         if (response.status === 200) {
-          handleClose(); // Закрываем модальное окно после успешного обновления
+          window.location.reload();
         }
-      } else {
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
         const response = await category.create(values);
         if (response.status === 201) {
-          handleClose(); // Закрываем модальное окно после успешного создания
+          window.location.reload();
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -51,7 +54,9 @@ const Index = ({ open, handleClose, item }) => {
       onClose={handleClose}
       closeAfterTransition
       BackdropComponent={Backdrop}
-      BackdropProps={{ timeout: 500 }}
+      BackdropProps={{
+        timeout: 500,
+      }}
     >
       <Fade in={open}>
         <Box
@@ -75,6 +80,7 @@ const Index = ({ open, handleClose, item }) => {
               <Form>
                 <Field
                   name="category_name"
+                  type="text"
                   as={TextField}
                   label="Category Name"
                   fullWidth
@@ -83,50 +89,28 @@ const Index = ({ open, handleClose, item }) => {
                   helperText={
                     <ErrorMessage
                       name="category_name"
-                      component="span"
-                      className="text-red text-15px"
+                      component="p"
+                      className="text-[red] text-[15px]"
                     />
                   }
                 />
-                <Box
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  disabled={isSubmitting}
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    mt: 2,
+                    backgroundColor: "#FE8A2F", // Updated to customColor
+                    color: "#FFFFFF", // White text color
+                    "&:hover": {
+                      backgroundColor: "#FFA752", // Updated to a slightly darker color for hover
+                    },
+                    marginBottom: "8px",
                   }}
                 >
-                  <Button
-                    type="button"
-                    variant="contained"
-                    onClick={handleClose}
-                    sx={{
-                      width: "48%",
-                      bgcolor: "#FACC15",
-                      color: "#fff",
-                      "&:hover": {
-                        bgcolor: "#FFBC15",
-                      },
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    disabled={isSubmitting}
-                    sx={{
-                      width: "48%",
-                      bgcolor: "#FACC15",
-                      color: "#fff",
-                      "&:hover": {
-                        bgcolor: "#FFBC15",
-                      },
-                    }}
-                  >
-                    {isSubmitting ? "Saving..." : "Save"}
-                  </Button>
-                </Box>
+                  {isSubmitting ? "Saving..." : "Save"}
+                </Button>
               </Form>
             )}
           </Formik>

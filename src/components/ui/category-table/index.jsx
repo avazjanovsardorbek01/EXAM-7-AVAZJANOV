@@ -1,6 +1,3 @@
-// CategoryTable.jsx
-
-import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,28 +9,43 @@ import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { category } from "../../../service";
+import { useState } from "react";
 import { CategoryModal } from "@modal";
 
+// Define youthful and fun color scheme with updated colors
+const colors = {
+  turquoise: "#FE8A2F", // Updated to #FE8A2F for turquoise color
+  yellow: "#FFFF00", // Yellow color
+  white: "#FFFFFF", // White color for background
+  black: "#000000", // Black color for typography
+  gray: "#F0F0F0", // Light gray for alternate rows
+};
+
+// Styled components for the table
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#FACC15",
-    color: theme.palette.common.white,
+    backgroundColor: colors.turquoise, // Updated to #FE8A2F for turquoise color in the header
+    color: colors.white, // White text for the header
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    color: colors.black, // Black text for the body
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: colors.white, // White color for odd rows
+  },
+  "&:nth-of-type(even)": {
+    backgroundColor: colors.gray, // Light gray for even rows
   },
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-const CategoryTable = ({ data }) => {
+const CustomizedTables = ({ data }) => {
   const [edit, setEdit] = useState({});
   const [open, setOpen] = useState(false);
 
@@ -77,29 +89,10 @@ const CategoryTable = ({ data }) => {
                   {item.category_name}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <button
-                    onClick={() => deleteItem(item.category_id)}
-                    style={{
-                      backgroundColor: "#FACC15",
-                      color: "#fff",
-                      padding: "5px",
-                      borderRadius: "5px",
-                      border: "none",
-                    }}
-                  >
+                  <button onClick={() => deleteItem(item.category_id)}>
                     <DeleteIcon />
                   </button>
-                  <button
-                    onClick={() => editItem(item)}
-                    style={{
-                      backgroundColor: "#FACC15",
-                      color: "#fff",
-                      padding: "5px",
-                      borderRadius: "5px",
-                      border: "none",
-                      marginLeft: "5px",
-                    }}
-                  >
+                  <button onClick={() => editItem(item)}>
                     <EditIcon />
                   </button>
                 </StyledTableCell>
@@ -112,4 +105,4 @@ const CategoryTable = ({ data }) => {
   );
 };
 
-export default CategoryTable;
+export default CustomizedTables;

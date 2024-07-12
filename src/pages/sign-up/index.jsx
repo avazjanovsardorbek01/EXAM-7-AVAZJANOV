@@ -1,24 +1,11 @@
-import React, { useState } from "react";
-import {
-  Button,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Typography,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Notification } from "../../utils/index";
 import { auth } from "../../service/";
 import { useMask } from "@react-input/mask";
-import { signUpValidationSchema } from "../../utils/validation";
-
-// Import Nike Icon SVG URL
-import nikeIcon from "../../assets/nike.svg";
 
 const Index = () => {
   const initialValues = {
@@ -27,13 +14,13 @@ const Index = () => {
     password: "",
     phone_number: "",
   };
-
   const inputRef = useMask({
     mask: "+998 (__) ___-__-__",
     replacement: { _: /\d/ },
   });
-
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (values) => {
@@ -51,7 +38,8 @@ const Index = () => {
           title: response.data.message,
           type: "success",
         });
-        navigate("/sign-in");
+        setOpen(true);
+        setEmail(values.email);
       } else {
         Notification({
           title: "Sign Up Failed",
@@ -78,31 +66,12 @@ const Index = () => {
   }, [navigate]);
 
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignItems="center"
-      style={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}
-    >
-      <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: 20 }}>
-          <div
-            style={{ display: "flex", alignItems: "center", marginBottom: 20 }}
-          >
-            <img
-              src={nikeIcon}
-              alt="Nike Logo"
-              style={{ width: 30, marginRight: 10 }}
-            />
-            <Typography
-              variant="h4"
-              align="center"
-              gutterBottom
-              style={{ color: "#000", fontWeight: 700 }}
-            >
-              Register
-            </Typography>
-          </div>
+    <>
+      <div className="h-screen flex-col flex items-center justify-center gap-5 p-5">
+        <h1 className="text-[35px] font-normal sm:text-[36px] md:text-[56px]">
+          Register
+        </h1>
+        <div className="max-w-[600px]">
           <Formik
             initialValues={initialValues}
             onSubmit={handleSubmit}
@@ -125,10 +94,6 @@ const Index = () => {
                       className="text-[red] text-[15px]"
                     />
                   }
-                  sx={{
-                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                      { borderColor: "#FFBC35" },
-                  }}
                 />
                 <Field
                   name="phone_number"
@@ -146,10 +111,6 @@ const Index = () => {
                       className="text-[red] text-[15px]"
                     />
                   }
-                  sx={{
-                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                      { borderColor: "#FFBC35" },
-                  }}
                 />
                 <Field
                   name="email"
@@ -166,10 +127,6 @@ const Index = () => {
                       className="text-[red] text-[15px]"
                     />
                   }
-                  sx={{
-                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                      { borderColor: "#FFBC35" },
-                  }}
                 />
                 <Field
                   name="password"
@@ -198,10 +155,6 @@ const Index = () => {
                       </InputAdornment>
                     ),
                   }}
-                  sx={{
-                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                      { borderColor: "#FFBC35" },
-                  }}
                 />
                 <Button
                   type="submit"
@@ -209,28 +162,22 @@ const Index = () => {
                   color="primary"
                   fullWidth
                   disabled={isSubmitting}
-                  sx={{
-                    marginTop: 2,
-                    marginBottom: 2,
-                    backgroundColor: "#FFBC35",
-                  }}
+                  sx={{ marginBottom: "8px" }}
                 >
-                  {isSubmitting ? "Submitting..." : "Sign Up"}
+                  {isSubmitting ? "Yuborilmoqda..." : "Sign Up"}
                 </Button>
-                <Typography
-                  variant="body2"
-                  align="center"
-                  style={{ cursor: "pointer", color: "#1976d2", marginTop: 20 }}
+                <span
                   onClick={() => navigate("/sign-in")}
+                  className="text-blue-300 cursor-pointer hover:text-blue-500"
                 >
-                  Already have an account? Sign In
-                </Typography>
+                  Already have an account?
+                </span>
               </Form>
             )}
           </Formik>
-        </Paper>
-      </Grid>
-    </Grid>
+        </div>
+      </div>
+    </>
   );
 };
 
