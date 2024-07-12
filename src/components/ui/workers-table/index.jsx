@@ -13,7 +13,6 @@ import workers from "../../../service/workers";
 import { WorkersModal } from "@modal";
 import { useState } from "react";
 
-// Define the color scheme
 const colors = {
   header: "#FE8A2F",
   white: "#FFFFFF",
@@ -21,7 +20,6 @@ const colors = {
   black: "#000000",
 };
 
-// Styled components for the table
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: colors.header,

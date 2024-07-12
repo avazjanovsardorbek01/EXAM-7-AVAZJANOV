@@ -12,33 +12,31 @@ import { category } from "../../../service";
 import { useState } from "react";
 import { CategoryModal } from "@modal";
 
-// Define youthful and fun color scheme with updated colors
 const colors = {
-  turquoise: "#FE8A2F", // Updated to #FE8A2F for turquoise color
-  yellow: "#FFFF00", // Yellow color
-  white: "#FFFFFF", // White color for background
-  black: "#000000", // Black color for typography
-  gray: "#F0F0F0", // Light gray for alternate rows
+  turquoise: "#FE8A2F",
+  yellow: "#FFFF00",
+  white: "#FFFFFF",
+  black: "#000000",
+  gray: "#F0F0F0",
 };
 
-// Styled components for the table
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: colors.turquoise, // Updated to #FE8A2F for turquoise color in the header
-    color: colors.white, // White text for the header
+    backgroundColor: colors.turquoise,
+    color: colors.white,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    color: colors.black, // Black text for the body
+    color: colors.black,
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: colors.white, // White color for odd rows
+    backgroundColor: colors.white,
   },
   "&:nth-of-type(even)": {
-    backgroundColor: colors.gray, // Light gray for even rows
+    backgroundColor: colors.gray,
   },
   "&:last-child td, &:last-child th": {
     border: 0,

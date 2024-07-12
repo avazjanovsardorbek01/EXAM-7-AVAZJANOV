@@ -19,14 +19,13 @@ import routes from "../router/routes";
 import { LogOutModal } from "./modal";
 import NikeLogo from "../assets/icons-nike.svg";
 
-// Define the color scheme
 const colors = {
   turquoise: "#FE8A2F",
   white: "#FFFFFF",
   gray: "#F0F0F0",
   black: "#000000",
   customColor: "#FE8A2F",
-  hoverColor: "#FFA752", // Updated hover color
+  hoverColor: "#FFA752",
 };
 
 const drawerWidth = 240;
@@ -119,7 +118,7 @@ function ResponsiveDrawer(props) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: colors.customColor, // Updated color here
+          backgroundColor: colors.customColor,
         }}
       >
         <Toolbar>
