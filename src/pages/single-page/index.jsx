@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { get_product } from "../../service/products";
-import "./single.css";
 
 const SinglePage = () => {
   const { id } = useParams();
